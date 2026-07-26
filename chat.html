@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>KwêVoël Chat</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div id="usernameScreen" class="overlay">
+
+<div class="popup">
+
+<h2>Welcome to KwêVoël</h2>
+
+<p>Choose a username</p>
+
+<input type="text" id="usernameInput" placeholder="Username">
+
+<button onclick="saveUsername()">Continue</button>
+
+</div>
+
+</div>
+
+<div class="chatContainer">
+
+<div class="topBar">
+
+<img src="assets/logo1.png" class="topLogo">
+
+<div>
+
+<h2>KwêVoël</h2>
+
+<p id="myName"></p>
+
+</div>
+
+</div>
+
+<div id="messages" class="messages">
+
+<div class="systemMessage">
+Welcome to KwêVoël
+</div>
+
+</div>
+
+<div class="bottomBar">
+
+<input
+type="text"
+id="messageInput"
+placeholder="Type a message...">
+
+<button onclick="sendMessage()">Send</button>
+
+</div>
+
+<div class="pttArea">
+
+<button id="pttButton">
+
+🎙 HOLD TO TALK
+
+</button>
+
+</div>
+
+</div>
+
+<script src="app.js"></script>
+
+</body>
+</html>
