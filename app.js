@@ -1,46 +1,105 @@
-if(localStorage.getItem("loggedIn")!="true"){
-window.location="index.html";
+// Check login
+if (localStorage.getItem("loggedIn") !== "true") {
+    window.location.href = "index.html";
 }
 
-let username=localStorage.getItem("username");
+// Username
+let username = localStorage.getItem("username");
 
-if(username){
-document.getElementById("usernameScreen").style.display="none";
-document.getElementById("myName").innerHTML=username;
+if (username) {
+    document.getElementById("usernameScreen").style.display = "none";
+    document.getElementById("myName").textContent = username;
 }
 
-function saveUsername(){
+// Save username first time
+function saveUsername() {
 
-let name=document.getElementById("usernameInput").value.trim();
+    let name = document.getElementById("usernameInput").value.trim();
 
-if(name==="") return;
+    if (name.length < 2) {
+        alert("Please enter a username.");
+        return;
+    }
 
-localStorage.setItem("username",name);
+    localStorage.setItem("username", name);
 
-document.getElementById("usernameScreen").style.display="none";
+    username = name;
 
-document.getElementById("myName").innerHTML=name;
+    document.getElementById("myName").textContent = name;
 
+    document.getElementById("usernameScreen").style.display = "none";
 }
 
-function sendMessage(){
+// Send message
+function sendMessage() {
 
-let box=document.getElementById("messageInput");
+    let input = document.getElementById("messageInput");
 
-let text=box.value.trim();
+    let message = input.value.trim();
 
-if(text==="") return;
+    if (message === "") return;
 
-let div=document.createElement("div");
+    firebase.database().ref("messages").push({
 
-div.className="myMessage";
+        user: username,
 
-div.innerHTML=text;
+        text: message,
 
-document.getElementById("messages").appendChild(div);
+        time: Date.now()
 
-box.value="";
+    });
 
-document.getElementById("messages").scrollTop=document.getElementById("messages").scrollHeight;
-
+    input.value = "";
 }
+
+// Send with Enter
+document.getElementById("messageInput").addEventListener("keypress", function(e){
+
+    if(e.key==="Enter"){
+
+        sendMessage();
+
+    }
+
+});
+
+// Listen for messages
+firebase.database().ref("messages").on("value", function(snapshot){
+
+    const messages = document.getElementById("messages");
+
+    messages.innerHTML = "";
+
+    snapshot.forEach(function(child){
+
+        let data = child.val();
+
+        let div = document.createElement("div");
+
+        if(data.user === username){
+
+            div.className = "myMessage";
+
+        }else{
+
+            div.className = "otherMessage";
+
+        }
+
+        let time = new Date(data.time);
+
+        let hours = time.getHours().toString().padStart(2,"0");
+        let mins = time.getMinutes().toString().padStart(2,"0");
+
+        div.innerHTML =
+        "<b>"+data.user+"</b><br>"
+        +data.text+
+        "<br><small>"+hours+":"+mins+"</small>";
+
+        messages.appendChild(div);
+
+    });
+
+    messages.scrollTop = messages.scrollHeight;
+
+});
